@@ -54,9 +54,24 @@ spring.datasource.driver-class-name=org.h2.Driver
 spring.datasource.username=admin
 spring.datasource.password=
 ```
+```js
+CREATE TABLE TABLE_NAME(
+    id     VARCHAR(10),
+    name   VARCHAR(10),
+    date   DATE,
+    time   TIME,
+    rate   DECIMAL(10, 5),
+    amt_b  DECIMAL(15, 2),
+    amt_s  DECIMAL(15, 2)
+);
+
+INSERT INTO TABLE_NAME VALUES(
+'A123456789', 'KAI', '2022-05-18', '13:30:50', '12345.12345', '1234567890123.99', '1234567890123.99'
+);
+```
 ***
 * example 1
-  * 設定lombok、slf4j、OpenAPI
+  * 設定Lombok、Slf4j、OpenAPI
   * fcb-example 範例26
 ```js
 @Data
