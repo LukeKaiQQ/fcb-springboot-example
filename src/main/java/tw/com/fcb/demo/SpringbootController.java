@@ -17,6 +17,14 @@ public class SpringbootController {
 //	example 1
 	@GetMapping("/example1")
 	public void Example1() {
+		FcbLombokExample fcbLombokExample = 
+				FcbLombokExample.builder()
+								.id("A123456789")
+								.name("KAI")
+								.age(35)
+								.build();
+		log.info("{}", fcbLombokExample);
+		
 		commonAreaService = new SpringbootService();
 		commonAreaService.splitArray();
 		commonAreaService.showList();
