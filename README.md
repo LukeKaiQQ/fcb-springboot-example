@@ -169,4 +169,49 @@ public void testFindById() {
 ```
 *** 
 * example 7
+  * GetMapping
+  * @PathVariable接收參數套用至URI Template
+```js
+@GetMapping("/url/{id}")
+public void function(@PathVariable String id) {
+    ...
+}
+```
+***  
+* example 8
+  * PostMapping
+  * @RequestParam接收來自URL參數
+  * @RequestBody接收來自requestBody參數(XML、JSON…)，僅用於POST
+```js
+@PostMapping("/url")
+public void function(@RequestParam("id") String id,...){
+    ...
+}
+```
+```js
+@PostMapping("/url")
+public void function(@RequestBody CommonArea commonArea) {
+    ...
+}
+```
+*** 
+* example 9
+  * PutMapping
+```js
+@PutMapping("/url")
+public void function(@RequestBody CommonArea commonArea) {
+    ...
+}
+```
+*** 
+* example 10
+  * DeleteMapping
+```js
+@DeleteMapping("/url")
+public void function(@RequestParam String id) {
+    ....
+}
+```
+*** 
+* example 11
 *** 
