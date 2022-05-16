@@ -96,4 +96,37 @@ public class SpringbootService {
 		repository = new SpringbootRepository();
 		repository.update();
 	}
+	
+//	==============================================================================================
+	
+//	example 7
+	public void findByIdByGet(String id) throws Exception {
+		repository = new SpringbootRepository();
+		lists = new ArrayList<CommonArea>();
+
+		lists = repository.findById(id);
+		log.info("{}", lists);
+	}
+	
+//	example 8
+	public void insertByPost(CommonArea commonArea) throws Exception {
+		commonArea.setDate(LocalDate.now());
+		commonArea.setTime(LocalTime.now().truncatedTo(ChronoUnit.SECONDS));
+		commonArea.setAmountS();
+		
+		repository = new SpringbootRepository();
+		repository.insert(commonArea);
+	}
+	
+//	example 9
+	public void updateByPut(CommonArea commonArea) throws Exception {
+		repository = new SpringbootRepository();
+		repository.updateAll(commonArea);
+	}
+	
+//	example 10
+	public void delete(String id) throws Exception {
+		repository = new SpringbootRepository();
+		repository.delete(id);
+	}
 }

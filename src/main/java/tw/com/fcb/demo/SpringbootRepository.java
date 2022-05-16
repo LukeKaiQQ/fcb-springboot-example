@@ -145,4 +145,34 @@ public class SpringbootRepository {
 		
 		pStatement.clearParameters();
 	}
+	
+	public void updateAll(CommonArea commonArea) throws Exception {
+		String updateSql = "UPDATE TEST_TB SET NAME = ?, DATE = ?, TIME = ?, RATE = ?, AMOUNT_B = ?, AMOUNT_S = ? WHERE id = ?";
+		pStatement = connection.prepareStatement(updateSql);
+		pStatement.setString(1, commonArea.getName());
+		pStatement.setObject(2, LocalDate.now());
+		pStatement.setObject(3, LocalTime.now());
+		pStatement.setBigDecimal(4, commonArea.getRate());
+		pStatement.setBigDecimal(5, commonArea.getAmountB());
+		pStatement.setBigDecimal(6, commonArea.getAmountS());
+		pStatement.setString(7, commonArea.getId());
+		
+		int affectedRow = pStatement.executeUpdate();
+		log.info("{}", "Total " + affectedRow + " data updated");
+		
+		pStatement.clearParameters();
+	}
+	
+//	example 10
+	public void delete(String id) throws Exception {
+		String deleteSql = "DELETE FROM TEST_TB WHERE id = ?";
+		pStatement = connection.prepareStatement(deleteSql);
+		pStatement.setString(1, id);
+		
+		int affectedRow = pStatement.executeUpdate();
+		log.info("{}", "Total " + affectedRow + " data deleted");
+		
+		pStatement.clearParameters();
+	}
+	
 }
