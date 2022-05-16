@@ -102,7 +102,7 @@ connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
 statement = connection.createStatement();
 resultSet = statement.executeQuery("SELECT * FROM TABLE_NAME");
-while(resultSet.next()){
+while(resultSet.next()) {
     System.out.println("ID: " + resultSet.getString("id"));
     ...
 }
@@ -133,7 +133,7 @@ pStatement.executeUpdate();
 * example 5
   * update()、delete()
 ```js
-String updateSql = "UPDATE TABLE_NAME SET AMOUNT_B = ?, DATE = ?, TIME = ? WHERE id = ?";
+String updateSql = "UPDATE TABLE_NAME SET Column1 = ?, Column2 = ?, Column3 = ? WHERE id = ?";
 pStatement = connection.prepareStatement(updateSql);
 ...
 
