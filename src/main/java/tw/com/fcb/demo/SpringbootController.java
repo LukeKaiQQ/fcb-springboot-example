@@ -1,5 +1,6 @@
 package tw.com.fcb.demo;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,13 +40,61 @@ public class SpringbootController {
 //	example 2
 	@GetMapping("/example2")
 	public void Example2() {
-		commonAreaService = new SpringbootService();
-		commonAreaService.findAll();
+		try {
+			commonAreaService = new SpringbootService();
+			commonAreaService.findAll();
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
+//	example 3
 	@GetMapping("/example3")
 	public void Example3() {
-		commonAreaService = new SpringbootService();
-		commonAreaService.findById();
+		try {
+			commonAreaService = new SpringbootService();
+			commonAreaService.findById();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
+//	example 4
+	@GetMapping("/example4")
+	public void Example4() {
+		try {
+			commonAreaService = new SpringbootService();
+			commonAreaService.insert();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+//	example 5
+	@GetMapping("/example5")
+	public void Example5() {
+		try {
+			commonAreaService = new SpringbootService();
+			commonAreaService.update();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

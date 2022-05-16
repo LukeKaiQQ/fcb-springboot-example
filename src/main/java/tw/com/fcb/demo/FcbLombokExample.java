@@ -1,22 +1,16 @@
 package tw.com.fcb.demo;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
+@Data
 public class FcbLombokExample {
 	String id;
 	String name;
 	int age;
-	
-	public FcbLombokExample() {
-		
-	}
-	
-	public FcbLombokExample(String id, String name, int age) {
-		this.id = id;
-		this.name = name;
-		this.age = age;
-	}
 }
