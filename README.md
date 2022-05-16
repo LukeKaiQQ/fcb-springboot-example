@@ -74,18 +74,14 @@ INSERT INTO TABLE_NAME VALUES(
   * 設定Lombok、Slf4j、OpenAPI
   * fcb-example 範例26
 ```js
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
+@Data
 public class FcbLombokExample {
     String id;
     String name;
     int age;
-    
-    public FcbLombokExample(String id, String name, int age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-    }
 }
 
 @Slf4j
@@ -100,6 +96,7 @@ log.info("{}", fcbLombokExample);
 ```js
 connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
+statement = connection.createStatement();
 resultSet = statement.executeQuery("SELECT * FROM TABLE_NAME");
 while(resultSet.next()){
     System.out.println("ID: " + resultSet.getString("id"));
@@ -121,4 +118,25 @@ while(resultSet.next()) {
 ```
 *** 
 * example 4 
+  * insert()
+```js
+String insertSql = "INSERT INTO TEST_TB VALUES(?,?,?,?,?,?,?)";
+pStatement = connection.prepareStatement(insertSql);
+...
+pStatement.executeUpdate();
+```
+*** 
+* example 5
+  * update() 
+```js
+String updateSql = "UPDATE TEST_TB SET AMOUNT_B = ?, DATE = ?, TIME = ? WHERE id = ?";
+pStatement = connection.prepareStatement(updateSql);
+
+int affectedRow = pStatement.executeUpdate();
+log.info("{}", "Total " + affectedRow + " data updated");
+```
+*** 
+* example 6
+*** 
+* example 7
 *** 
