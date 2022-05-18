@@ -17,11 +17,11 @@ import lombok.NoArgsConstructor;
 public class CommonArea {
 	private String id;
 	private String name;
-	private LocalDate date;
-	private LocalTime time;
-	BigDecimal rate;
-	BigDecimal amountB;
-	BigDecimal amountS;
+	private BigDecimal rate;
+	private BigDecimal amountB;
+	private BigDecimal amountS;
+	private LocalDate created_date;
+	private LocalTime created_time;
 	
 	public void setAmountS() {
         this.amountS = this.amountB.multiply(this.rate).setScale(2, RoundingMode.HALF_UP);

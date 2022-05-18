@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +25,7 @@ public class SpringbootController {
 	SpringbootService commonAreaService = null;
 	
 //	example 1
+//	@RequestMapping(value = "/apixx/example1", method = RequestMethod.GET)
 	@GetMapping("/example1")
 	@Operation(description = "讀取陣列儲存於vo物件 + Lombok實作 + Log實作", summary="取得List清單")
 	public void Example1() {
@@ -117,8 +119,8 @@ public class SpringbootController {
 	@GetMapping("/example7/{id}")
 	@Operation(description = "讀取資料庫單筆查詢 findById()", summary="資料庫單筆查詢 GET")
 	public void Example7(@PathVariable String id) {
-		commonAreaService = new SpringbootService();
 		try {
+			commonAreaService = new SpringbootService();
 			commonAreaService.findByIdByGet(id);
 		}
 		catch (Exception e) {
@@ -137,8 +139,8 @@ public class SpringbootController {
 		commonArea.setRate(rate);
 		commonArea.setAmountB(amountB);
 		
-		commonAreaService = new SpringbootService();
 		try {
+			commonAreaService = new SpringbootService();
 			commonAreaService.insertByPost(commonArea);
 		} 
 		catch (Exception e) {
@@ -149,8 +151,8 @@ public class SpringbootController {
 //	@PostMapping("/example8")
 //	@Operation(description = "新增資料到資料庫 insert()", summary="資料庫新增 POST")
 //	public void Example8(@RequestBody CommonArea commonArea) {
-//		commonAreaService = new SpringbootService();
 //		try {
+//			commonAreaService = new SpringbootService();
 //			commonAreaService.insertByPost(commonArea);
 //		} 
 //		catch (Exception e) {
@@ -162,8 +164,8 @@ public class SpringbootController {
 	@PutMapping("/example9")
 	@Operation(description = "更正資料庫特定資料 update()", summary="資料庫更正 PUT")
 	public void Example9(@RequestBody CommonArea commonArea) {
-		commonAreaService = new SpringbootService();
 		try {
+			commonAreaService = new SpringbootService();
 			commonAreaService.updateByPut(commonArea);
 		}
 		catch(Exception e) {
@@ -175,8 +177,8 @@ public class SpringbootController {
 	@DeleteMapping("/example10")
 	@Operation(description = "刪除資料庫特定資料 delete()", summary="資料庫刪除 DELETE")
 	public void Example10(@RequestParam String id) {
-		commonAreaService = new SpringbootService();
 		try {
+			commonAreaService = new SpringbootService();
 			commonAreaService.delete(id);
 		} 
 		catch (Exception e) {

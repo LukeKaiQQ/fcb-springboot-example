@@ -38,8 +38,8 @@ public class SpringbootService {
 	}
 	
 	public void addList(CommonArea commonArea) {
-		commonArea.setDate(LocalDate.now());
-		commonArea.setTime(LocalTime.now().truncatedTo(ChronoUnit.SECONDS));
+		commonArea.setCreated_date(LocalDate.now());
+		commonArea.setCreated_time(LocalTime.now().truncatedTo(ChronoUnit.SECONDS));
 		commonArea.setAmountS();
 		lists.add(commonArea);
 	}
@@ -66,7 +66,7 @@ public class SpringbootService {
 		repository = new SpringbootRepository();
 		lists = new ArrayList<CommonArea>();
 
-		lists = repository.findById("0505XXXX");
+		lists = repository.findById("A123456789");
 		log.info("{}", lists);
 		
 //		CommonArea commonArea = CommonArea.builder().id("0505XXXX").build();
@@ -81,11 +81,11 @@ public class SpringbootService {
 				CommonArea.builder()
 							.id("I100999999")
 							.name("kai")
-							.date(LocalDate.now())
-							.time(LocalTime.now())
 							.rate(BigDecimal.valueOf(99999.99999))
 							.amountB(BigDecimal.valueOf(99999.99))
 							.amountS(BigDecimal.valueOf(99999.99))
+							.created_date(LocalDate.now())
+							.created_time(LocalTime.now())
 							.build();
 		
 		repository.insert(commonArea);
@@ -110,8 +110,8 @@ public class SpringbootService {
 	
 //	example 8
 	public void insertByPost(CommonArea commonArea) throws Exception {
-		commonArea.setDate(LocalDate.now());
-		commonArea.setTime(LocalTime.now().truncatedTo(ChronoUnit.SECONDS));
+		commonArea.setCreated_date(LocalDate.now());
+		commonArea.setCreated_time(LocalTime.now().truncatedTo(ChronoUnit.SECONDS));
 		commonArea.setAmountS();
 		
 		repository = new SpringbootRepository();

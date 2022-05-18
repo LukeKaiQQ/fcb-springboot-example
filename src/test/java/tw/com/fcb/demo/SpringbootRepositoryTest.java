@@ -24,7 +24,7 @@ class SpringbootRepositoryTest {
 			SpringbootRepository repository = new SpringbootRepository();
 			List<CommonArea> lists = new ArrayList<CommonArea>();
 
-			lists = repository.findById("86483XXX");
+			lists = repository.findById("A123456789");
 			assertEquals(lists.get(0).getAmountB(), BigDecimal.valueOf(1234567890123.99));
 		} 
 		catch (Exception e) {
@@ -37,11 +37,11 @@ class SpringbootRepositoryTest {
 		CommonArea commonArea = CommonArea.builder()
 										.id("86483XXX")
 										.name("kai")
-										.date(LocalDate.now())
-										.time(LocalTime.now())
 										.rate(BigDecimal.valueOf(99999.99999))
 										.amountB(BigDecimal.valueOf(99999.99))
 										.amountS(BigDecimal.valueOf(99999.99))
+										.created_date(LocalDate.now())
+										.created_time(LocalTime.now())
 										.build();
 		
 		try {

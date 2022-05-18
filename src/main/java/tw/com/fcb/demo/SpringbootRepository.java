@@ -51,20 +51,20 @@ public class SpringbootRepository {
 		while(resultSet.next()) {
 //			System.out.println("ID: " + resultSet.getString("id"));
 //			System.out.println("NAME: " + resultSet.getString("name"));
-//			System.out.println("DATE: " + resultSet.getDate("date"));
-//			System.out.println("TIME: " + resultSet.getTime("time"));
 //			System.out.println("RATE: " + resultSet.getBigDecimal("rate"));
 //			System.out.println("AMOUNTB: " + resultSet.getBigDecimal("amount_b"));
 //			System.out.println("AMOUNTS: " + resultSet.getBigDecimal("amount_s"));
+//			System.out.println("DATE: " + resultSet.getDate("created_date"));
+//			System.out.println("TIME: " + resultSet.getTime("created_time"));
 				
 			commonArea = new CommonArea();
 			commonArea.setId(resultSet.getString("id"));
 			commonArea.setName(resultSet.getString("name"));
-			commonArea.setDate(resultSet.getDate("date").toLocalDate());
-			commonArea.setTime(resultSet.getTime("time").toLocalTime());
 			commonArea.setRate(resultSet.getBigDecimal("rate"));
 			commonArea.setAmountB(resultSet.getBigDecimal("amount_b"));
 			commonArea.setAmountS(resultSet.getBigDecimal("amount_s"));
+			commonArea.setCreated_date(resultSet.getDate("created_date").toLocalDate());
+			commonArea.setCreated_time(resultSet.getTime("created_time").toLocalTime());
 				
 			lists.add(commonArea);
 		}
@@ -86,11 +86,12 @@ public class SpringbootRepository {
 			commonArea = new CommonArea();
 			commonArea.setId(resultSet.getString("id"));
 			commonArea.setName(resultSet.getString("name"));
-			commonArea.setDate(resultSet.getDate("date").toLocalDate());
-			commonArea.setTime(resultSet.getTime("time").toLocalTime());
 			commonArea.setRate(resultSet.getBigDecimal("rate"));
 			commonArea.setAmountB(resultSet.getBigDecimal("amount_b"));
 			commonArea.setAmountS(resultSet.getBigDecimal("amount_s"));
+//			commonArea.setCreated_date(resultSet.getString("created_date"));
+			commonArea.setCreated_date(resultSet.getDate("created_date").toLocalDate());
+			commonArea.setCreated_time(resultSet.getTime("created_time").toLocalTime());
 					
 			lists.add(commonArea);
 		}
@@ -104,11 +105,11 @@ public class SpringbootRepository {
 //		pStatement = connection.prepareStatement(insertSql);
 //		pStatement.setString(1, "A987654321");
 //		pStatement.setString(2, "HAHA");
-//		pStatement.setObject(3, LocalDate.now());
-//		pStatement.setObject(4, LocalTime.now());
-//		pStatement.setBigDecimal(5, BigDecimal.valueOf(99999.99999));
-//		pStatement.setBigDecimal(6, BigDecimal.valueOf(12345.99));
-//		pStatement.setBigDecimal(7, BigDecimal.valueOf(12345.99));
+//		pStatement.setBigDecimal(3, BigDecimal.valueOf(99999.99999));
+//		pStatement.setBigDecimal(4, BigDecimal.valueOf(12345.99));
+//		pStatement.setBigDecimal(5, BigDecimal.valueOf(12345.99));
+//	    pStatement.setObject(6, LocalDate.now());
+//	    pStatement.setObject(7, LocalTime.now());
 //		pStatement.executeUpdate();
 //		pStatement.clearParameters();
 //		
@@ -120,25 +121,26 @@ public class SpringbootRepository {
 		pStatement = connection.prepareStatement(insertSql);
 		pStatement.setString(1, commonArea.getId());
 		pStatement.setString(2, commonArea.getName());
-		pStatement.setObject(3, commonArea.getDate());
-		pStatement.setObject(4, commonArea.getTime());
-		pStatement.setBigDecimal(5, commonArea.getRate());
-		pStatement.setBigDecimal(6, commonArea.getAmountB());
-		pStatement.setBigDecimal(7, commonArea.getAmountS());
+		pStatement.setBigDecimal(3, commonArea.getRate());
+		pStatement.setBigDecimal(4, commonArea.getAmountB());
+		pStatement.setBigDecimal(5, commonArea.getAmountS());
+		pStatement.setObject(6, commonArea.getCreated_date());
+		pStatement.setObject(7, commonArea.getCreated_time());
 		pStatement.executeUpdate();
 		pStatement.clearParameters();
-		
+
 		log.info("{}", "Insert success...");
 	}
+
 	
 //	example 5
 	public void update() throws Exception {
-		String updateSql = "UPDATE TEST_TB SET AMOUNT_B = ?, DATE = ?, TIME = ? WHERE id = ?";
+		String updateSql = "UPDATE TEST_TB SET AMOUNT_B = ?, CREATED_DATE = ?, CREATED_TIME = ? WHERE id = ?";
 		pStatement = connection.prepareStatement(updateSql);
 		pStatement.setString(1, "9999999.99");
 		pStatement.setObject(2, LocalDate.now());
 		pStatement.setObject(3, LocalTime.now());
-		pStatement.setString(4, "86483XXX");
+		pStatement.setString(4, "A123456789");
 		
 		int affectedRow = pStatement.executeUpdate();
 		log.info("{}", "Total " + affectedRow + " data updated");
@@ -147,14 +149,14 @@ public class SpringbootRepository {
 	}
 	
 	public void updateAll(CommonArea commonArea) throws Exception {
-		String updateSql = "UPDATE TEST_TB SET NAME = ?, DATE = ?, TIME = ?, RATE = ?, AMOUNT_B = ?, AMOUNT_S = ? WHERE id = ?";
+		String updateSql = "UPDATE TEST_TB SET NAME = ?, RATE = ?, AMOUNT_B = ?, AMOUNT_S = ?, CREATED_DATE = ?, CREATED_TIME = ? WHERE id = ?";
 		pStatement = connection.prepareStatement(updateSql);
 		pStatement.setString(1, commonArea.getName());
-		pStatement.setObject(2, LocalDate.now());
-		pStatement.setObject(3, LocalTime.now());
-		pStatement.setBigDecimal(4, commonArea.getRate());
-		pStatement.setBigDecimal(5, commonArea.getAmountB());
-		pStatement.setBigDecimal(6, commonArea.getAmountS());
+		pStatement.setBigDecimal(2, commonArea.getRate());
+		pStatement.setBigDecimal(3, commonArea.getAmountB());
+		pStatement.setBigDecimal(4, commonArea.getAmountS());
+		pStatement.setObject(5, LocalDate.now());
+		pStatement.setObject(6, LocalTime.now());
 		pStatement.setString(7, commonArea.getId());
 		
 		int affectedRow = pStatement.executeUpdate();
