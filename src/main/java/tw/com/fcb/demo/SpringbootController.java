@@ -95,6 +95,22 @@ public class SpringbootController {
 			e.printStackTrace();
 		}
 	}
+
+//	Test getGeneratedKeys
+//	@GetMapping("/example_by_generate")
+//	@Operation(description = "新增資料到資料庫 insert()", summary="資料庫新增")
+//	public void ExampleByGenerate() {
+//		try {
+//			commonAreaService = new SpringbootService();
+//			commonAreaService.insertByGenerate();
+//		}
+//		catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 //	example 5
 	@GetMapping("/example5")

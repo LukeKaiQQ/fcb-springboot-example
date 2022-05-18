@@ -91,6 +91,12 @@ public class SpringbootService {
 		repository.insert(commonArea);
 	}
 	
+//	Test getGeneratedKeys
+//	public void insertByGenerate() throws Exception {
+//		repository = new SpringbootRepository();
+//		repository.insertByGenerate();
+//	}
+	
 //	example 5
 	public void update() throws Exception {
 		repository = new SpringbootRepository();

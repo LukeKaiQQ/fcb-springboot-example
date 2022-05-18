@@ -131,7 +131,19 @@ public class SpringbootRepository {
 
 		log.info("{}", "Insert success...");
 	}
-
+	
+//	Test getGeneratedKeys
+//	public void insertByGenerate() throws Exception {
+//		String insertSql = "INSERT INTO TEST(C1) VALUES(?)";
+//		pStatement = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
+//		pStatement.setInt(1, 100);
+//		pStatement.executeUpdate();
+//		
+//		ResultSet rs = pStatement.getGeneratedKeys();
+//		if(rs.next()) {
+//			System.out.println("id = " + rs.getInt(1));
+//		}
+//	}
 	
 //	example 5
 	public void update() throws Exception {
