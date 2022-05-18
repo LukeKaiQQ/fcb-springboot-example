@@ -39,6 +39,7 @@
 <dependency>
     <groupId>org.springdoc</groupId>
     <artifactId>springdoc-openapi-ui</artifactId>
+    <version>1.6.8</version>
 </dependency>
 ```
 *** 
@@ -59,18 +60,18 @@ spring.datasource.password=
 ```js
 #schema.sql
 CREATE TABLE TABLE_NAME(
-    id     VARCHAR(10),
-    name   VARCHAR(10),
-    date   DATE,
-    time   TIME,
-    rate   DECIMAL(10, 5),
-    amt_b  DECIMAL(15, 2),
-    amt_s  DECIMAL(15, 2)
+    id             VARCHAR(10),
+    name           VARCHAR(10),
+    rate           DECIMAL(10, 5),
+    amount_b       DECIMAL(15, 2),
+    amount_s       DECIMAL(15, 2),
+    created_date   DATE,
+    created_time   TIME
 );
 
 #data.sql
 INSERT INTO TABLE_NAME VALUES(
-'A123456789', 'KAI', '2022-05-18', '13:30:50', '12345.12345', '1234567890123.99', '1234567890123.99'
+'A123456789', 'KAI', '12345.12345', '1234567890123.99', '1234567890123.99', NOW(), NOW()
 );
 ```
 ***
@@ -123,6 +124,7 @@ while(resultSet.next()) {
 *** 
 * example 4 
   * insert()
+  * executeUpdate
 ```js
 String insertSql = "INSERT INTO TABLE_NAME VALUES(?,?,?,?,?,?,?)";
 pStatement = connection.prepareStatement(insertSql);
@@ -168,8 +170,9 @@ public void testFindById() {
 }
 ```
 *** 
-* example 7
-  * GetMapping
+* example 7 - 查詢
+  * @RequestMapping(value = "/url", method = RequestMethod.GET) 
+  * @GetMapping("/url")
   * @PathVariable接收參數套用至URI Template
 ```js
 @GetMapping("/url/{id}")
@@ -178,13 +181,14 @@ public void function(@PathVariable String id) {
 }
 ```
 ***  
-* example 8
-  * PostMapping
+* example 8 - 新增
+  * @RequestMapping(value = "/url", method = RequestMethod.POST)
+  * @PostMapping("/url")
   * @RequestParam接收來自URL參數
   * @RequestBody接收來自requestBody參數(XML、JSON…)，僅用於POST
 ```js
 @PostMapping("/url")
-public void function(@RequestParam("id") String id,...){
+public void function(@RequestParam("id") String id,...) {
     ...
 }
 ```
@@ -195,8 +199,8 @@ public void function(@RequestBody CommonArea commonArea) {
 }
 ```
 *** 
-* example 9
-  * PutMapping
+* example 9 - 修改
+  * @PutMapping("/url")
 ```js
 @PutMapping("/url")
 public void function(@RequestBody CommonArea commonArea) {
@@ -204,8 +208,8 @@ public void function(@RequestBody CommonArea commonArea) {
 }
 ```
 *** 
-* example 10
-  * DeleteMapping
+* example 10 - 刪除
+  * @DeleteMapping("/url")
 ```js
 @DeleteMapping("/url")
 public void function(@RequestParam String id) {
