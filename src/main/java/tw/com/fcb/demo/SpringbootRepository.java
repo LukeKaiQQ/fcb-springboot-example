@@ -188,5 +188,4 @@ public class SpringbootRepository {
 		
 		pStatement.clearParameters();
 	}
-	
 }

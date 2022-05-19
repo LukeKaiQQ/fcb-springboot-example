@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class CommonArea {
-	@Size(min=10, max=20)
 	private String id;
 	private String name;
 	private BigDecimal rate;

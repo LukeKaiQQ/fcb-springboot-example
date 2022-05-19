@@ -5,8 +5,17 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import javax.validation.constraints.Size;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +28,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+
 import lombok.extern.slf4j.Slf4j;
+import tw.com.fcb.demo.jpa.CommonAreaData;
+import tw.com.fcb.demo.jpa.Response;
 
 @RestController
 @RequestMapping("/api")
 @Slf4j
 public class SpringbootController {
+	@Autowired
+	SpringbootService springbootService;
+	
 	SpringbootService commonAreaService = null;
 	
 //	example 1
@@ -134,6 +149,7 @@ public class SpringbootController {
 		}
 	}
 	
+	
 //	==============================================================================================
 //	example 6 : JUnit單元測試
 	
@@ -206,6 +222,144 @@ public class SpringbootController {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+//	==============================================================================================
+//	Using JpaRepository
+	
+//	example 11
+//	@GetMapping("/example11")
+//	@Operation(description = "讀取資料庫單筆查詢 findById() - JPA", summary="資料庫單筆查詢 GET")
+//	Optional<CommonAreaData> Example11(@RequestParam Long id) {
+//		return springbootService.findByIdCommonAreaData(id);
+//	}
+	
+	@GetMapping("/example11")
+	@Operation(description = "讀取資料庫單筆查詢 findById() - JPA", summary="資料庫單筆查詢 GET")
+	Response<Optional<CommonAreaData>> Example11(@RequestParam Long id) {
+		Response<Optional<CommonAreaData>> response = new Response<Optional<CommonAreaData>>();
+		Optional<CommonAreaData> responseCommonAreaData = Optional.ofNullable(new CommonAreaData());
+		
+		responseCommonAreaData = springbootService.findByIdCommonAreaData(id);
+		if(responseCommonAreaData.isEmpty()) {
+			response.of("9999", "查詢失敗", responseCommonAreaData);
+		}
+		else {
+			response.of("0000", "查詢成功", responseCommonAreaData);
+		}
+		
+		return response;
+	}
+	
+//	example 12
+//	@PostMapping("/example12")
+//	@Operation(description = "新增資料到資料庫 insert() - JPA", summary="資料庫新增 POST")
+//	public void Example12(@RequestBody CommonAreaData commonAreaData) {
+//		springbootService.insertCommonAreaData(commonAreaData);
+//	}
+	
+	@PostMapping("/example12")
+	@Operation(description = "新增資料到資料庫 insert() - JPA", summary="資料庫新增 POST")
+	public Response<CommonAreaData> Example12(@RequestBody CommonAreaData commonAreaData) {
+		Response<CommonAreaData> response = new Response<CommonAreaData>();
+		CommonAreaData responseCommonAreaData = new CommonAreaData();
+		
+		responseCommonAreaData = springbootService.insertCommonAreaData(commonAreaData);
+		response.of("0000", "新增成功", responseCommonAreaData);
+		
+		return response;
+	}
+	
+//	example 13
+//	@PutMapping("/example13")
+//	@Operation(description = "更正資料庫特定資料 update() - JPA", summary="資料庫更正 PUT")
+//	public void Example13(@RequestBody CommonAreaData commonAreaData) {
+//		springbootService.updateCommonAreaData(commonAreaData);
+//	}
+	
+	@PutMapping("/example13")
+	@Operation(description = "更正資料庫特定資料 update() - JPA", summary="資料庫更正 PUT")
+	public Response<CommonAreaData> Example13(@RequestBody CommonAreaData commonAreaData) {
+		Response<CommonAreaData> response = new Response<CommonAreaData>();
+		CommonAreaData responseCommonAreaData = new CommonAreaData();
+		
+		responseCommonAreaData = springbootService.updateCommonAreaData(commonAreaData);
+		if(responseCommonAreaData == null) {
+			response.of("9999", "修改失敗", responseCommonAreaData);
+		}
+		else {
+			response.of("0000", "修改成功", responseCommonAreaData);
+		}
+		
+		return response;
+	}
+	
+//	example 14
+	@DeleteMapping("/example14")
+	@Operation(description = "刪除資料庫特定資料 delete() - JPA", summary="資料庫刪除 DELETE")
+	public Response<CommonAreaData> Example14(@RequestParam Long id) {
+		Response<CommonAreaData> response = new Response<CommonAreaData>();
+		
+		try {
+			springbootService.deleteCommonAreaData(id);
+			response.of("0000", "刪除成功");
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+			response.of("9999", e.getMessage());
+		}
+		
+		return response;
+	}
+	
+	
+//	==============================================================================================
+//	Validation
+	
+//	example 15
+	@PostMapping("/example15")
+	@Operation(description = "新增資料到資料庫 insert()", summary="資料庫新增 POST")
+	public void Example15(@Size(min=1, max=5)  @RequestParam("id") String id, @RequestParam("name") String name, 
+							@RequestParam("rate") BigDecimal rate, @RequestParam("amountB") BigDecimal amountB) {
+		CommonArea commonArea = new CommonArea();
+		commonArea.setId(id);
+		commonArea.setName(name);
+		commonArea.setRate(rate);
+		commonArea.setAmountB(amountB);
+		
+		try {
+			commonAreaService = new SpringbootService();
+			commonAreaService.insertByPost(commonArea);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+//	example 16
+	@PostMapping("/example16")
+	@Operation(description = "新增資料到資料庫 insert() - JPA", summary="資料庫新增 POST")
+	public Response<CommonAreaData> Example16(@Validated @RequestBody CommonAreaData commonAreaData, BindingResult result) {
+		Response<CommonAreaData> response = new Response<CommonAreaData>();
+		CommonAreaData responseCommonAreaData = new CommonAreaData();
+		
+		Map<String, Object> fielderror = new HashMap<String, Object>();
+		List<FieldError>errors= result.getFieldErrors();
+        for (FieldError error : errors) {
+            fielderror.put(error.getField(), error.getDefaultMessage());
+        }
+        System.out.println(fielderror);
+        
+        if(fielderror.size() > 0) {
+        	response.of("9999", fielderror.get("custId").toString(), responseCommonAreaData);
+        }
+        else {
+        	responseCommonAreaData = springbootService.insertCommonAreaData(commonAreaData);
+    		response.of("0000", "新增成功", responseCommonAreaData);
+        }
+        
+		return response;
 	}
 	
 }

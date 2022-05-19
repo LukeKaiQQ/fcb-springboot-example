@@ -6,13 +6,19 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import tw.com.fcb.demo.jpa.CommonAreaData;
+import tw.com.fcb.demo.jpa.CommonAreaDataRepository;
 
 @Service
 @Slf4j
 public class SpringbootService {
+	@Autowired
+	CommonAreaDataRepository commonAreaDataRepository;
+	
 	List<CommonArea> lists = null;
 	SpringbootRepository repository = null;
 	
@@ -104,6 +110,7 @@ public class SpringbootService {
 		repository.update();
 	}
 	
+	
 //	==============================================================================================
 	
 //	example 7
@@ -135,5 +142,52 @@ public class SpringbootService {
 	public void delete(String id) throws Exception {
 		repository = new SpringbootRepository();
 		repository.delete(id);
+	}
+	
+	
+//	==============================================================================================
+	
+//	example 11
+	Optional<CommonAreaData> findByIdCommonAreaData(Long id) {
+		return commonAreaDataRepository.findById(id);
+	}
+	
+//	example 12
+//	public void insertCommonAreaData(CommonAreaData commonAreaData) {
+//		commonAreaDataRepository.save(commonAreaData);
+//	}
+	
+	public CommonAreaData insertCommonAreaData(CommonAreaData commonAreaData) {
+		CommonAreaData saveCommonAreaData = commonAreaDataRepository.save(commonAreaData);
+		
+		return saveCommonAreaData;
+	}
+	
+//	example 13
+//	public void updateCommonAreaData(CommonAreaData commonAreaData) {
+//		if(findByIdCommonAreaData(commonAreaData.getId()).isEmpty()) {
+//			log.info("{}", "ERROR");
+//		}
+//		else {
+//			commonAreaDataRepository.save(commonAreaData);
+//		}
+//	}
+	
+	public CommonAreaData updateCommonAreaData(CommonAreaData commonAreaData) {
+		CommonAreaData updateCommonAreaData = null;
+		
+		if(findByIdCommonAreaData(commonAreaData.getId()).isEmpty()) {
+			log.info("{}", "Not Found");
+		}
+		else {
+			updateCommonAreaData = commonAreaDataRepository.save(commonAreaData);
+		}
+		
+		return updateCommonAreaData;
+	}
+	
+//	example 14
+	public void deleteCommonAreaData(Long id) throws Exception {
+		commonAreaDataRepository.deleteById(id);
 	}
 }
