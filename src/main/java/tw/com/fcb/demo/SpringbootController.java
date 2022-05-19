@@ -2,6 +2,9 @@ package tw.com.fcb.demo;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,6 +37,9 @@ public class SpringbootController {
 								.id("A123456789")
 								.name("KAI")
 								.age(35)
+								.deposit(BigDecimal.valueOf(1000000.00).setScale(2))
+								.created_date(LocalDate.now())
+								.created_time(LocalTime.now().truncatedTo(ChronoUnit.SECONDS))
 								.build();
 		log.info("{}", fcbLombokExample);
 		

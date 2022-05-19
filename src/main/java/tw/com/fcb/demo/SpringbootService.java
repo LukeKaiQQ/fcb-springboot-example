@@ -33,14 +33,15 @@ public class SpringbootService {
 			commonArea.setName(tokens[1]);
 			commonArea.setRate(new BigDecimal(tokens[2]));
 			commonArea.setAmountB(new BigDecimal(tokens[3]));
+			commonArea.setAmountS();
+			commonArea.setCreated_date(LocalDate.now());
+			commonArea.setCreated_time(LocalTime.now().truncatedTo(ChronoUnit.SECONDS));
+			
 			addList(commonArea);
 		}
 	}
 	
 	public void addList(CommonArea commonArea) {
-		commonArea.setCreated_date(LocalDate.now());
-		commonArea.setCreated_time(LocalTime.now().truncatedTo(ChronoUnit.SECONDS));
-		commonArea.setAmountS();
 		lists.add(commonArea);
 	}
 	

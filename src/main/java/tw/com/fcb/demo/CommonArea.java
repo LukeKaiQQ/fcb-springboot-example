@@ -5,6 +5,8 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class CommonArea {
+	@Size(min=10, max=20)
 	private String id;
 	private String name;
 	private BigDecimal rate;
