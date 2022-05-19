@@ -13,15 +13,20 @@
     <scope>test</scope>
 </dependency>
 
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-devtools</artifactId>
-    <optional>true</optional>
-</dependency>
+<dependency> 
+    <groupId>org.springframework.boot</groupId> 
+    <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>	
 
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <optional>true</optional>
 </dependency>
 
 <dependency>
@@ -70,9 +75,7 @@ CREATE TABLE TABLE_NAME(
 );
 
 #data.sql
-INSERT INTO TABLE_NAME VALUES(
-'A123456789', 'KAI', '12345.12345', '1234567890123.99', '1234567890123.99', NOW(), NOW()
-);
+INSERT INTO TABLE_NAME VALUES('A123456789', 'KAI', '12345.12345', '1234567890123.99', '1234567890123.99', NOW(), NOW());
 ```
 ***
 * example 1
@@ -84,9 +87,12 @@ INSERT INTO TABLE_NAME VALUES(
 @Builder
 @Data
 public class FcbLombokExample {
-    String id;
-    String name;
-    int age;
+    private String id;
+    private String name;
+    private int age;
+    private BigDecimal doposit;
+    private LocalDate created_date;
+    private LocalTime created_time;
 }
 
 @Slf4j
@@ -99,10 +105,10 @@ log.info("{}", fcbLombokExample);
   * findAll()
   * Connection、Statement、executeQuery、ResultSet
 ```js
-connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
-statement = connection.createStatement();
-resultSet = statement.executeQuery("SELECT * FROM TABLE_NAME");
+Statement statement = connection.createStatement();
+ResultSet resultSet = statement.executeQuery("SELECT * FROM TABLE_NAME");
 while(resultSet.next()) {
     System.out.println("ID: " + resultSet.getString("id"));
     ...
@@ -113,7 +119,7 @@ while(resultSet.next()) {
   * findById() 
   * PreparedStatement
 ```js
-pStatement = connection.prepareStatement("SELECT * FROM TABLE_NAME WHERE column = ?);
+PreparedStatement pStatement = connection.prepareStatement("SELECT * FROM TABLE_NAME WHERE column = ?);
 pStatement.setString(1, id);
 resultSet = pStatement.executeQuery();
 while(resultSet.next()) {
@@ -135,7 +141,7 @@ pStatement.executeUpdate();
 * example 5
   * update()、delete()
 ```js
-String updateSql = "UPDATE TABLE_NAME SET Column1 = ?, Column2 = ?, Column3 = ? WHERE id = ?";
+String updateSql = "UPDATE TABLE_NAME SET Column1 = ?, Column2 = ?, ... WHERE id = ?";
 pStatement = connection.prepareStatement(updateSql);
 ...
 
@@ -216,6 +222,116 @@ public void function(@RequestParam String id) {
     ....
 }
 ```
+***
+* JpaRepository 
+  * @Entity : 宣告類別為一個實體，映射至一個資料表
+  * @Table : 定義資料表名稱
+  * @Column : 定義資料欄位名稱
+  * @Id : 定義該欄位為Primary Key
+  * @GeneratedValue(strategy = GenerationType.IDENTITY) : (類似SQL的AUTO_INCREMENT)
+```js
+@Entity
+@Table(name = "TABLE_NAME")
+@Data
+public class CommonAreaData {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "JPA_ID")
+    private Long id;
+    
+    @Column(name = "JPA_CUSTID")
+    @Size(min = 8, max = 12, message = "統編長度錯誤")
+    private String custId;
+    
+    @Column(name = "JPA_NAME")
+    @Size(min = 1, max = 10, message = "姓名長度錯誤")
+    private String name;
+    
+    @Column(name = "JPA_DEPOSIT")
+    private BigDecimal deposit;
+    
+    @Column(name = "CREATED_DATE")
+    private LocalDate created_date;
+    
+    @Column(name = "CREATED_TIME")
+    private LocalTime created_time;
+}
+```
+```js
+@Repository
+public interface CommonAreaDataRepository extends JpaRepository<CommonAreaData, Long> { 
+    ... 
+}
+```
+***
+* example 11 - 查詢
+  * 使用 JpaRepository 提供的 findById() 方法
+```js
+Optional<CommonAreaData> findByIdCommonAreaData(Long id) {
+    return commonAreaDataRepository.findById(id);
+}
+```
 *** 
-* example 11
+* example 12 - 新增
+  * 使用 JpaRepository 提供的 save() 方法
+```js
+public CommonAreaData insertCommonAreaData(CommonAreaData commonAreaData) {
+    CommonAreaData saveCommonAreaData = commonAreaDataRepository.save(commonAreaData);
+    
+    return saveCommonAreaData;
+}
+```
 *** 
+* example 13 - 修改
+  * 使用 JpaRepository 提供的 save() 方法 
+```js
+public CommonAreaData updateCommonAreaData(CommonAreaData commonAreaData) {
+    CommonAreaData updateCommonAreaData = null;
+    
+    if(findByIdCommonAreaData(commonAreaData.getId()).isEmpty()) {
+        log.info("{}", "Not Found");
+    }
+    else {
+        updateCommonAreaData = commonAreaDataRepository.save(commonAreaData);
+    }
+    
+    return updateCommonArea;
+}
+```
+* example 14 - 刪除
+  * 使用 JpaRepository 提供的 deleteById() 方法
+```js
+public void deleteCommonAreaData(Long id) throws Exception {
+    commonAreaDataRepository.deleteById(id);
+}
+```
+* example 15
+  * Validation
+  * @NotNull、@NotEmpty、@Min(value)、@Max(value)、@Size(max, min)、@Length ...
+```js
+@PostMapping("/example15")
+public void function(@Size(min=1, max=10) @RequestParam("id") String id, ...) {
+    ... 
+}
+```
+***
+* example 16
+  * @Validated
+```js
+public Response<CommonAreaData> function(@Validated @RequestBody CommonAreaData commonAreaData, BindingResult result) {
+    Response<CommonAreaData> response = new Response<CommonAreaData>();
+    CommonAreaData responseCommonAreaData = new CommonAreaData();
+    
+    Map<String, Object> fielderror = new HashMap<String, Object>();
+    List<FieldError>errors= result.getFieldErrors();
+    for (FieldError error : errors) {
+        fielderror.put(error.getField(), error.getDefaultMessage());
+    }
+    ...
+    
+    return response;
+}
+```
+*** 
+* example 17
+***
