@@ -172,8 +172,8 @@ public void testFindById() {
         SpringbootRepository repository = new SpringbootRepository();
         List<CommonArea> lists = new ArrayList<CommonArea>();
         
-        lists = repository.findById("86483XXX");
-        assertEquals(lists.get(0).getAmountB(), BigDecimal.valueOf(1234567890123.99));
+        lists = repository.findById("A123456789");
+        assertEquals(BigDecimal.valueOf(1234567890123.99), lists.get(0).getAmountB());
     }
     catch(Exception e) {
         e.printStackTrace();
@@ -184,7 +184,7 @@ public void testFindById() {
 * example 7 - 查詢
   * @RequestMapping(value = "/url", method = RequestMethod.GET) 
   * @GetMapping("/url")
-  * @PathVariable接收參數套用至URI Template
+  * @PathVariable接收參數套用至URI Template [http://url/{id}]
 ```js
 @GetMapping("/url/{id}")
 public void function(@PathVariable String id) {
@@ -195,7 +195,7 @@ public void function(@PathVariable String id) {
 * example 8 - 新增
   * @RequestMapping(value = "/url", method = RequestMethod.POST)
   * @PostMapping("/url")
-  * @RequestParam接收來自URL參數
+  * @RequestParam接收來自URL參數 [http://url/?參數1=xxx&參數2=xxx ...]
   * @RequestBody接收來自requestBody參數(XML、JSON…)，僅用於POST
 ```js
 @PostMapping("/url")
@@ -265,7 +265,11 @@ public class CommonAreaData {
 ```js
 @Repository
 public interface CommonAreaDataRepository extends JpaRepository<CommonAreaData, Long> { 
-    ... 
+    CommonAreaData findByName(String name);
+    
+    @Query(value = "SELECT t.custId, COUNT(t.custId) FROM CommonAreaData AS t GROUP BY t.custId")
+    List<String> countByCustId();
+    ...
 }
 ```
 ***
@@ -320,7 +324,17 @@ public void deleteCommonAreaData(Long id) throws Exception {
 ```
 * example 16
   * Validation
-  * @NotNull、@NotEmpty、@Min(value)、@Max(value)、@Size(max, min)、@Length ...
+  * 參考網址 : https://www.baeldung.com/javax-validation
+ 
+| 功能               | 說明          |
+| ------------------|:--------------|
+| @NotNull          | 資料不得為Null |
+| @NotEmpty         | 資料不得為空   | 
+| @Size(min, max)   | 資料範圍區間   |
+| @Length(min, max) | 字串長度範圍   |
+| @Min(value)       | 數值資料最小值 |
+| @Max(value)       | 數值資料最大值 |
+
 ```js
 @PostMapping("/example16")
 public void function(@Size(min=1, max=10) @RequestParam("id") String id, ...) {
@@ -369,4 +383,42 @@ public CommonAreaData addCommonAreaData(CommonAreaData commonAreaData) {
 ```
 ***  
 * example 19
+  * Query Creation : 自訂搜尋條件
+  * 參考網址 : https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods.query-creation
+
+| 關鍵字            | 範例                                |
+| -----------------|:------------------------------------|
+| And              | findBy[Column1]And[Column2]         |
+| Or               | findBy[Column1]Or[Column2]          | 
+| LessThanEqual    | findBy[Column]LessThanEqual         |
+| GreaterThanEqual | findBy[Column]GreaterThanEqual      |
+| Like             | findBy[Column]Like                  |
+| OrderBy          | findBy[Column1]OrderBy[Column2]Desc |
+
+```js
+public CommonAreaData findByNameCommonAreaData(String name) {
+    return commonAreaDataRepository.findByName(name);
+}
+```
+* example 20
+  * MockMvc
+```js
+MockMvc result = mockmvc.perform(get("/url").param("參數1", "value1"))
+                        .andExpect(status().isOk())
+                        .andDo(print())
+                        .andReturn().getResponse().getContentAsString();
+```
+```js
+MockMvc result = mockmvc.perform(get("/url/{參數1}", value1))
+                        .andExpect(status().isOk())
+                        .andDo(print())
+                        .andReturn().getResponse().getContentAsString();
+```
+```js
+MockMvc result = mockMvc.perform(post("/url"))
+                        .content(ObjectMapper.writeValueAsString(cmd))
+                        .andExpect(status().isOk())
+                        .andDo(print())
+                        .andReturn().getResponse().getContentAsString(Charset.defaultCharset());
+```
 ***
