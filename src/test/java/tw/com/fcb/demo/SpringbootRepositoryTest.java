@@ -25,7 +25,7 @@ class SpringbootRepositoryTest {
 			List<CommonArea> lists = new ArrayList<CommonArea>();
 
 			lists = repository.findById("A123456789");
-			assertEquals(lists.get(0).getAmountB(), BigDecimal.valueOf(1234567890123.99));
+			assertEquals(BigDecimal.valueOf(1234567890123.99), lists.get(0).getAmountB());
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

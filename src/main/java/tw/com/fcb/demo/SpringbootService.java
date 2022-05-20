@@ -6,6 +6,10 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +22,9 @@ import tw.com.fcb.demo.jpa.CommonAreaDataRepository;
 public class SpringbootService {
 	@Autowired
 	CommonAreaDataRepository commonAreaDataRepository;
+	
+	@Autowired
+	Validator validator;
 	
 	List<CommonArea> lists = null;
 	SpringbootRepository repository = null;
@@ -148,11 +155,16 @@ public class SpringbootService {
 //	==============================================================================================
 	
 //	example 11
+	List<CommonAreaData> findAllCommonAreaData() {
+		return commonAreaDataRepository.findAll();
+	}
+	
+//	example 12
 	Optional<CommonAreaData> findByIdCommonAreaData(Long id) {
 		return commonAreaDataRepository.findById(id);
 	}
 	
-//	example 12
+//	example 13
 //	public void insertCommonAreaData(CommonAreaData commonAreaData) {
 //		commonAreaDataRepository.save(commonAreaData);
 //	}
@@ -163,7 +175,7 @@ public class SpringbootService {
 		return saveCommonAreaData;
 	}
 	
-//	example 13
+//	example 14
 //	public void updateCommonAreaData(CommonAreaData commonAreaData) {
 //		if(findByIdCommonAreaData(commonAreaData.getId()).isEmpty()) {
 //			log.info("{}", "ERROR");
@@ -186,8 +198,35 @@ public class SpringbootService {
 		return updateCommonAreaData;
 	}
 	
-//	example 14
+//	example 15
 	public void deleteCommonAreaData(Long id) throws Exception {
 		commonAreaDataRepository.deleteById(id);
+	}
+	
+//	example 18
+	public CommonAreaData addCommonAreaData(CommonAreaData commonAreaData) {
+		Set<ConstraintViolation<CommonAreaData>> violations = validator.validate(commonAreaData);
+		
+		if(!violations.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			
+			for(ConstraintViolation<CommonAreaData> constraintViolation : violations) {
+				sb.append(constraintViolation.getMessage());
+			}
+			throw new ConstraintViolationException("Error occurred: " + sb.toString(), violations);
+		}
+		
+		commonAreaDataRepository.save(commonAreaData);
+		
+		return commonAreaData;
+	}
+	
+//	example 19
+	public CommonAreaData findByNameCommonAreaData(String name) {
+		return commonAreaDataRepository.findByName(name);
+	}
+	
+	public List<String> countByCustId() {
+		return commonAreaDataRepository.countByCustId();
 	}
 }
