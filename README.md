@@ -273,6 +273,43 @@ public interface CommonAreaDataRepository extends JpaRepository<CommonAreaData, 
 }
 ```
 ***
+* CommonAreaDataCmd / CommonAreaDataDto
+```js
+@Data
+@Schema(description = "CommonAreaDataCmd")
+public class CommonAreaDataCmd {
+    @Schema(description = "統編ID")
+    @Size(min = 8, max = 12, message = "統編長度錯誤")
+    private String custId;
+    
+    @Schema(description = "統編名稱")
+    @Size(min = 1, max = 10, message = "姓名長度錯誤")
+    private String name;
+    
+    @Schema(description = "存款")
+    private BigDecimal deposit;
+    
+    @Schema(description = "建立日期")
+    private LocalDate created_date;
+    
+    @Schema(description = "建立時間")
+    private LocalTime created_time;
+}
+```
+```js
+public CommonAreaDataDto insertCommonAreaDataCmd(CommonAreaDataCmd commonAreaDataCmd) {
+    CommonAreaData commonAreaData = new CommonAreaData();
+    BeanUtils.copyProperties(commonAreaDataCmd, commonAreaData);
+    
+    CommonAreaData saveCommonAreaData = commonAreaDataRepository.save(commonAreaData);
+    
+    CommonAreaDataDto commonAreaDataDto = new CommonAreaDataDto();
+    BeanUtils.copyProperties(saveCommonAreaData, commonAreaDataDto);
+    
+    return commonAreaDataDto;
+}
+```
+***
 * example 11 - 多筆查詢
   * 使用 JpaRepository 提供的 findAll() 方法
 ```js
@@ -403,13 +440,13 @@ public CommonAreaData findByNameCommonAreaData(String name) {
 * example 20
   * MockMvc
 ```js
-MockMvc result = mockmvc.perform(get("/url").param("參數1", "value1"))
+MockMvc result = mockmvc.perform(get("/url/{參數1}", value1))
                         .andExpect(status().isOk())
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
 ```
 ```js
-MockMvc result = mockmvc.perform(get("/url/{參數1}", value1))
+MockMvc result = mockmvc.perform(get("/url").param("參數1", "value1"))
                         .andExpect(status().isOk())
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString();
