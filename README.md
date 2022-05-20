@@ -62,6 +62,7 @@ spring.datasource.password=
 ```
 * Schema & Data
   * 新增 schema.sql 和 data.sql 至 target/classes 目錄下
+  * H2 : http://localhost:8080/h2-console/
 ```js
 #schema.sql
 CREATE TABLE TABLE_NAME(
@@ -79,8 +80,9 @@ INSERT INTO TABLE_NAME VALUES('A123456789', 'KAI', '12345.12345', '1234567890123
 ```
 ***
 * example 1
-  * 設定Lombok、Slf4j、OpenAPI
   * fcb-example 範例26
+  * 設定Lombok、Slf4j、OpenAPI
+  * Swagger : http://localhost:8080/swagger-ui/index.html
 ```js
 @NoArgsConstructor
 @AllArgsConstructor
@@ -103,7 +105,10 @@ log.info("{}", fcbLombokExample);
 ***
 * example 2
   * findAll()
-  * Connection、Statement、executeQuery、ResultSet
+  * Connection : 資料庫連線
+  * Statement : 使用Connection的createStatement()來建立Statement物件
+  * executeQuery : 執行 SQL(SELECT) 語法
+  * ResultSet物件查詢執行結果
 ```js
 Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
@@ -117,7 +122,7 @@ while(resultSet.next()) {
 *** 
 * example 3
   * findById() 
-  * PreparedStatement
+  * PreparedStatement : 設定參數的預先編譯SQL語句
 ```js
 PreparedStatement pStatement = connection.prepareStatement("SELECT * FROM TABLE_NAME WHERE column = ?);
 pStatement.setString(1, id);
@@ -130,7 +135,7 @@ while(resultSet.next()) {
 *** 
 * example 4 
   * insert()
-  * executeUpdate
+  * executeUpdate : 執行 SQL(INSERT、UDPATE、DELETE) 語法
 ```js
 String insertSql = "INSERT INTO TABLE_NAME VALUES(?,?,?,?,?,?,?)";
 pStatement = connection.prepareStatement(insertSql);
@@ -264,7 +269,15 @@ public interface CommonAreaDataRepository extends JpaRepository<CommonAreaData, 
 }
 ```
 ***
-* example 11 - 查詢
+* example 11 - 多筆查詢
+  * 使用 JpaRepository 提供的 findAll() 方法
+```js
+List<CommonAreaData> findAllCommonAreaData() {
+    return commonAreaDataRepository.findAll();
+}
+```
+*** 
+* example 12 - 單筆查詢
   * 使用 JpaRepository 提供的 findById() 方法
 ```js
 Optional<CommonAreaData> findByIdCommonAreaData(Long id) {
@@ -272,7 +285,7 @@ Optional<CommonAreaData> findByIdCommonAreaData(Long id) {
 }
 ```
 *** 
-* example 12 - 新增
+* example 13 - 新增
   * 使用 JpaRepository 提供的 save() 方法
 ```js
 public CommonAreaData insertCommonAreaData(CommonAreaData commonAreaData) {
@@ -282,7 +295,7 @@ public CommonAreaData insertCommonAreaData(CommonAreaData commonAreaData) {
 }
 ```
 *** 
-* example 13 - 修改
+* example 14 - 修改
   * 使用 JpaRepository 提供的 save() 方法 
 ```js
 public CommonAreaData updateCommonAreaData(CommonAreaData commonAreaData) {
@@ -298,33 +311,34 @@ public CommonAreaData updateCommonAreaData(CommonAreaData commonAreaData) {
     return updateCommonArea;
 }
 ```
-* example 14 - 刪除
+* example 15 - 刪除
   * 使用 JpaRepository 提供的 deleteById() 方法
 ```js
 public void deleteCommonAreaData(Long id) throws Exception {
     commonAreaDataRepository.deleteById(id);
 }
 ```
-* example 15
+* example 16
   * Validation
   * @NotNull、@NotEmpty、@Min(value)、@Max(value)、@Size(max, min)、@Length ...
 ```js
-@PostMapping("/example15")
+@PostMapping("/example16")
 public void function(@Size(min=1, max=10) @RequestParam("id") String id, ...) {
     ... 
 }
 ```
 ***
-* example 16
+* example 17
   * @Validated
 ```js
+@PostMapping("/example17")
 public Response<CommonAreaData> function(@Validated @RequestBody CommonAreaData commonAreaData, BindingResult result) {
     Response<CommonAreaData> response = new Response<CommonAreaData>();
     CommonAreaData responseCommonAreaData = new CommonAreaData();
     
     Map<String, Object> fielderror = new HashMap<String, Object>();
-    List<FieldError>errors= result.getFieldErrors();
-    for (FieldError error : errors) {
+    List<FieldError>errors = result.getFieldErrors();
+    for(FieldError error : errors) {
         fielderror.put(error.getField(), error.getDefaultMessage());
     }
     ...
@@ -333,5 +347,26 @@ public Response<CommonAreaData> function(@Validated @RequestBody CommonAreaData 
 }
 ```
 *** 
-* example 17
+* example 18
+  * Service 設定 Validation
+```js
+public CommonAreaData addCommonAreaData(CommonAreaData commonAreaData) {
+    Set<ConstraintViolation<CommonAreaData>> violations = validator.validate(commonAreaData);
+    
+    if(!violations.isEmpty()) {
+        StringBuilder sb = new StringBuilder();
+    
+        for(ConstraintViolation<CommonAreaData> constraintViolation : violations) {
+            sb.append(constraintViolation.getMessage());
+        }
+        throw new ConstraintViolationException("Error occurred: " + sb.toString(), violations);
+    }
+    
+    commonAreaDataRepository.save(commonAreaData);
+    
+    return commonAreaData;
+}
+```
+***  
+* example 19
 ***
