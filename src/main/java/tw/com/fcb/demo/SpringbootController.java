@@ -32,6 +32,8 @@ import io.swagger.v3.oas.annotations.Operation;
 
 import lombok.extern.slf4j.Slf4j;
 import tw.com.fcb.demo.jpa.CommonAreaData;
+import tw.com.fcb.demo.jpa.CommonAreaDataCmd;
+import tw.com.fcb.demo.jpa.CommonAreaDataDto;
 import tw.com.fcb.demo.jpa.Response;
 
 @RestController
@@ -247,7 +249,6 @@ public class SpringbootController {
 		return response;
 	}
 	
-	
 //	example 12
 //	@GetMapping("/example12")
 //	@Operation(description = "讀取資料庫單筆查詢 findById() - JPA", summary="資料庫單筆查詢 GET")
@@ -364,6 +365,40 @@ public class SpringbootController {
 //		System.out.println(commonAreaData);
 //	}
 	
+	@PostMapping("/example17/cmd_dto")
+	@Operation(description = "新增資料到資料庫 insert() - JPA - CMD-DTO", summary="資料庫新增 POST")
+	public Response<CommonAreaDataDto> ExampleCmdDto17(@Validated @RequestBody CommonAreaDataCmd commonAreaDataCmd, BindingResult result) {
+		Response<CommonAreaDataDto> response = new Response<CommonAreaDataDto>();
+		CommonAreaDataDto responseCommonAreaData = new CommonAreaDataDto();
+		
+		Map<String, Object> fielderror = new HashMap<String, Object>();
+		List<FieldError>errors = result.getFieldErrors();
+        for(FieldError error : errors) {
+            fielderror.put(error.getField(), error.getDefaultMessage());
+        }
+        
+        String errorMessage = "";
+        for(String errKey : fielderror.keySet()) {
+        	if(errKey.equals("custId")) {
+        		errorMessage = fielderror.get(errKey).toString();
+        	}
+        	if(errKey.equals("name")) {
+        		errorMessage = fielderror.get(errKey).toString();
+        	}
+        	System.out.println(errKey + ":" + fielderror.get(errKey));
+        }
+        
+        if(fielderror.size() > 0) {
+        	response.of("9999", errorMessage, responseCommonAreaData);
+        }
+        else {
+        	responseCommonAreaData = springbootService.insertCommonAreaDataCmd(commonAreaDataCmd);
+    		response.of("0000", "新增成功", responseCommonAreaData);
+        }
+		
+		return response;
+	}
+	
 	@PostMapping("/example17")
 	@Operation(description = "新增資料到資料庫 insert() - JPA", summary="資料庫新增 POST")
 	public Response<CommonAreaData> Example17(@Validated @RequestBody CommonAreaData commonAreaData, BindingResult result) {
@@ -397,7 +432,6 @@ public class SpringbootController {
         
 		return response;
 	}
-	
 	
 //	example 18
 	@PostMapping("/example18")
@@ -436,7 +470,7 @@ public class SpringbootController {
 	}
 	
 //	@GetMapping("/example19")
-//	@Operation(description = "讀取資料庫單筆查詢 findByName() - JPA", summary="資料庫單筆查詢 GET")
+//	@Operation(description = "讀取資料庫單筆查詢 countByCustId() - JPA", summary="資料庫單筆查詢 GET")
 //	public void Example19() {
 //		List<String> lists = new ArrayList<String>();
 //		lists = springbootService.countByCustId();

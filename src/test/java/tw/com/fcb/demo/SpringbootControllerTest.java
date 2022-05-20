@@ -3,11 +3,11 @@ package tw.com.fcb.demo;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -19,6 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import tw.com.fcb.demo.jpa.CommonAreaData;
 import tw.com.fcb.demo.jpa.CommonAreaDataRepository;
@@ -41,7 +43,7 @@ class SpringbootControllerTest {
 		var data = mockMvc.perform(get("/api/example12/").param("id", "1"))
 						.andExpect(status().isOk())
 						.andDo(print())
-						.andReturn().getResponse().getContentAsString();
+						.andReturn().getResponse().getContentAsString(Charset.defaultCharset());
 		
 		System.out.println("id: " + data);
 	}
@@ -52,17 +54,25 @@ class SpringbootControllerTest {
 		
 		CommonAreaData commonAreaData = new CommonAreaData();
 		commonAreaData.setId(2L);
-		commonAreaData.setCustId("AAA");
-		commonAreaData.setName("AAA");
+		commonAreaData.setCustId("stringst");
+		commonAreaData.setName("string");
 		commonAreaData.setDeposit(new BigDecimal("123.12"));
-//		commonAreaData.setCreated_date(LocalDate.now());
-//		commonAreaData.setCreated_time(LocalTime.now());
+
+		LocalDate date = LocalDate.now();
+		mapper.registerModule(new JavaTimeModule());
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		commonAreaData.setCreated_date(date);
 		
-		var result = mockMvc.perform(post("/example13").content(mapper.writeValueAsString(commonAreaData))
+		LocalTime time = LocalTime.now();
+		mapper.registerModule(new JavaTimeModule());
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		commonAreaData.setCreated_time(time);
+		
+		var result = mockMvc.perform(post("/api/example13").content(mapper.writeValueAsString(commonAreaData))
 							.contentType(MediaType.APPLICATION_JSON))
 							.andExpect(status().isOk())
 							.andDo(print())
-							.andReturn().getResponse().getContentAsString();
+							.andReturn().getResponse().getContentAsString(Charset.defaultCharset());
 		
 		System.out.println("result: " + result);
 	}

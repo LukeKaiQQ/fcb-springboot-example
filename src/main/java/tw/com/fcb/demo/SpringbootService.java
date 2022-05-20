@@ -10,11 +10,14 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 import tw.com.fcb.demo.jpa.CommonAreaData;
+import tw.com.fcb.demo.jpa.CommonAreaDataCmd;
+import tw.com.fcb.demo.jpa.CommonAreaDataDto;
 import tw.com.fcb.demo.jpa.CommonAreaDataRepository;
 
 @Service
@@ -173,6 +176,18 @@ public class SpringbootService {
 		CommonAreaData saveCommonAreaData = commonAreaDataRepository.save(commonAreaData);
 		
 		return saveCommonAreaData;
+	}
+	
+	public CommonAreaDataDto insertCommonAreaDataCmd(CommonAreaDataCmd commonAreaDataCmd) {
+		CommonAreaData commonAreaData = new CommonAreaData();
+		BeanUtils.copyProperties(commonAreaDataCmd, commonAreaData);
+		
+		CommonAreaData saveCommonAreaData = commonAreaDataRepository.save(commonAreaData);
+		
+		CommonAreaDataDto commonAreaDataDto = new CommonAreaDataDto();
+		BeanUtils.copyProperties(saveCommonAreaData, commonAreaDataDto);
+		
+		return commonAreaDataDto;
 	}
 	
 //	example 14
