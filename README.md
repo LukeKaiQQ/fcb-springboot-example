@@ -352,6 +352,7 @@ public CommonAreaData updateCommonAreaData(CommonAreaData commonAreaData) {
     return updateCommonArea;
 }
 ```
+***
 * example 15 - 刪除
   * 使用 JpaRepository 提供的 deleteById() 方法
 ```js
@@ -359,6 +360,7 @@ public void deleteCommonAreaData(Long id) throws Exception {
     commonAreaDataRepository.deleteById(id);
 }
 ```
+***
 * example 16
   * Validation
   * 參考網址 : https://www.baeldung.com/javax-validation
@@ -437,6 +439,7 @@ public CommonAreaData findByNameCommonAreaData(String name) {
     return commonAreaDataRepository.findByName(name);
 }
 ```
+***
 * example 20
   * MockMvc
 ```js
@@ -457,5 +460,28 @@ MockMvc result = mockMvc.perform(post("/url"))
                         .andExpect(status().isOk())
                         .andDo(print())
                         .andReturn().getResponse().getContentAsString(Charset.defaultCharset());
+```
+***
+* example 21
+  * JSON 
+```js
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Data
+public class User {
+    Integer id;
+    String name;
+
+    @JsonProperty("contact_email")
+    String contactEmail;
+}
+
+User -> Json字串
+ObjectMapper objectMapper = new ObjectMapper();
+String jsonResult = objectMapper.writeValueAsString(user);
+String prettyJsonResult = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(user);
+
+Json字串 -> User
+User userResult = objectMapper.readValue(json, User.class);
 ```
 ***
